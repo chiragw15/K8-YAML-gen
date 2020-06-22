@@ -2,10 +2,10 @@
 import { 
   Component 
 } from 'react'
-import _ from 'lodash'
 import { jsx } from '@emotion/core'
 import { Button, Dropdown } from 'semantic-ui-react'
-import images from '../../../../images'
+import images from '../../../../../images'
+import { FiDownload } from "react-icons/fi"
 
 class Header extends Component {
 
@@ -20,8 +20,8 @@ class Header extends Component {
   render() {
 
     const trigger = (
-      <span>
-        <img alt="user" src={images.USER} style={styles.userIcon}/> Hi, Chirag {loginInfo.name.split(' ')[0]}
+      <span style={styles.trigger}>
+        <img alt="user" src={images.USER} style={styles.userIcon}/> Hi, Chirag
       </span>
     )
 
@@ -42,19 +42,19 @@ class Header extends Component {
       <div style={styles.root} className={"header-column"}>
       
         <div style={styles.col2}>
-          <Button.Group color='blue'>
-            <Button onClick={() => {
-              this.downloadFile()
-            }}>Download Manifest
-            </Button>
-          </Button.Group>
+          <Button onClick={() => {
+            this.downloadFile()
+          }} primary content='Download Manifest' icon='download' labelPosition='left'>
+          </Button>
         </div>
 
         <div style={styles.col3}>
+          <span style={styles.trigger}>
+            <img alt="user" src={images.USER} style={styles.userIcon}/> Hi, Chirag
+          </span>
           <Dropdown 
             pointing='top right'
-            selectOnBlur={false}
-            trigger={trigger} 
+            selectOnBlur={false} 
             options={profileOptions}
             value={""}
             onChange={(event, data) => {
@@ -76,33 +76,44 @@ const styles = {
     flexDirection: 'row',
     minHeight: 70,
     maxHeight: 70,
+    alignItems: 'right',
+    justifyContent: 'flex-end',
     backgroundColor: 'rgb(245, 247, 250)',
     borderBottom: '1px solid rgb(237, 239, 241)',
   },
-  col1: {
-    width: 301,
-    paddingLeft: 15,
-    fontSize: 25,
+  button: {
+    // height: '40px',
     flex: 1,
-    fontWeight: '300',
     display: 'flex',
+    flexDirection: 'row',
+    margin: 5,
+    borderRadius: 15
+  },
+  download: {
+    marginLeft: 18
+  },
+  trigger: {
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'row',
     alignItems: 'center',
   },
   col2: {
-    paddingRight: 20,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'flex-end',
+    marginRight: 40
   },
   col3: {
     display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
     paddingRight: 20,
+    alignItems: 'center',
+    justifyContent: 'flex-end',
   },
   userIcon: {
-    width: 30,
-    height: 30,
+    width: 40,
+    height: 40,
+    marginRight: 5
   },
   titleParent: {
     display: 'flex',

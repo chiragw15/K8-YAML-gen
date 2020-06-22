@@ -174,7 +174,7 @@ const styles = {
     height: 'calc(100% - 70px)',
     position: 'absolute',
     right: 0,
-    top: 0,
+    // top: 0,
     bottom: 0,
     backgroundColor: 'white',
     borderLeft: '1px solid rgb(227, 229, 231)',

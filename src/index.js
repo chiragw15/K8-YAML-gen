@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './screens/App/App';
 import * as serviceWorker from './serviceWorker';
+import Flow from './screens/App/components/Flow/flow';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Flow />
   </React.StrictMode>,
   document.getElementById('root')
 );

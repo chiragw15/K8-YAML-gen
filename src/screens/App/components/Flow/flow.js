@@ -18,6 +18,7 @@ import { mapValues } from 'lodash'
 import * as actions from '@mrblenny/react-flow-chart/src/container/actions'
 import images from '../../../../images'
 import NodeOptionsView from './components/NodeOptionsView'
+import Header from './components/header'
 
 const CanvasOuterCustom = styled.div`
   position: relative;
@@ -155,98 +156,100 @@ class Flow extends Component {
 
     return (
       <div style={styles.root}>
-        <div style={styles.pageParent}>
-          <div style={styles.page}>
-
-            <div style={styles.sideBar}>
-              <div style={styles.sideBarSection}>
-              <img alt='logo' style={styles.img} src={images.LOGO} />
-                <div style={styles.message}>
-                  <div style={styles.palettleTitleContainer}>
-                    <span style={styles.palettleTitle}> Palette </span>
-                  </div>
-                  <span style={styles.italic}>Drag and drop these items onto the canvas.</span>
-                </div>
-                
-                <div style={styles.sidebarItemHeadingContainer}>
-                  <span style={styles.sidebarItemHeading}> Workloads </span>
-                </div>
-
-                <SidebarItem
-                  type="Cron Job"
-                  ports={ { port1: { id: 'port1', type: 'left', }, port2: { id: 'port2', type: 'right', }, }} 
-                />
-
-                <SidebarItem
-                  type="Daemon Set"
-                  ports={ { port1: { id: 'port1', type: 'left', }, port2: { id: 'port2', type: 'right', }, }}
-                />
-
-                <SidebarItem
-                  type="Deployment"
-                  ports={ { port1: { id: 'port1', type: 'left', }, port2: { id: 'port2', type: 'right', }, }}
-                />
-
-                <SidebarItem
-                  type="Job"
-                  ports={ { port1: { id: 'port1', type: 'left', }, port2: { id: 'port2', type: 'right', }, }}
-                />
-                
-                <SidebarItem
-                  type="Pod"
-                  ports={ { port1: { id: 'port1', type: 'left', }, port2: { id: 'port2', type: 'right', }, }}
-                />
-
-                <SidebarItem
-                  type="Replica Set"
-                  ports={ { port1: { id: 'port1', type: 'left', }, port2: { id: 'port2', type: 'right', }, }}
-                />
-
-                <SidebarItem
-                  type="Stateful Set"
-                  ports={ { port1: { id: 'port1', type: 'left', }, port2: { id: 'port2', type: 'right', }, }}
-                />
-
-                <div style={styles.sidebarItemHeadingContainer}>
-                  <span style={styles.sidebarItemHeading}> Discovery </span>
-                </div>
-
-                <SidebarItem
-                  type="Ingress"
-                  ports={ { port1: { id: 'port1', type: 'left', }, port2: { id: 'port2', type: 'right', }, }} 
-                />
-
-                <SidebarItem
-                  type="Service"
-                  ports={ { port1: { id: 'port1', type: 'left', }, port2: { id: 'port2', type: 'right', }, }}
-                />
-
-                <div style={styles.sidebarItemHeadingContainer}>
-                  <span style={styles.sidebarItemHeading}> Containers </span>
-                </div>
-                
-                <SidebarItem
-                  type="Container"
-                  ports={ { port1: { id: 'port1', type: 'left', }, port2: { id: 'port2', type: 'right', }, }}
-                />
-
-                <SidebarItem
-                  type="Init Container"
-                  ports={ { port1: { id: 'port1', type: 'left', }, port2: { id: 'port2', type: 'right', }, }}
-                />
-
-                <div style={styles.sidebarItemHeadingContainer}>
-                  <span style={styles.sidebarItemHeading}> Storage </span>
-                </div>
-
-                <SidebarItem
-                  type="Persistent Volume Claim"
-                  ports={ { port1: { id: 'port1', type: 'left', }, port2: { id: 'port2', type: 'right', }, }} 
-                />
-
+        <div style={styles.sideBar}>
+          {/* <div style={styles.sideBarSection}> */}
+          <img alt='logo' style={styles.img} src={images.LOGO} />
+            <div style={styles.message}>
+              <div style={styles.palettleTitleContainer}>
+                <span style={styles.palettleTitle}> Palette </span>
               </div>
+              <span style={styles.italic}>Drag and drop these items onto the canvas.</span>
             </div>
+            
+            <div style={styles.sidebarItemHeadingContainer}>
+              <span style={styles.sidebarItemHeading}> Workloads </span>
+            </div>
+
+            <SidebarItem
+              type="Cron Job"
+              ports={ { port1: { id: 'port1', type: 'left', }, port2: { id: 'port2', type: 'right', }, }} 
+            />
+
+            <SidebarItem
+              type="Daemon Set"
+              ports={ { port1: { id: 'port1', type: 'left', }, port2: { id: 'port2', type: 'right', }, }}
+            />
+
+            <SidebarItem
+              type="Deployment"
+              ports={ { port1: { id: 'port1', type: 'left', }, port2: { id: 'port2', type: 'right', }, }}
+            />
+
+            <SidebarItem
+              type="Job"
+              ports={ { port1: { id: 'port1', type: 'left', }, port2: { id: 'port2', type: 'right', }, }}
+            />
+            
+            <SidebarItem
+              type="Pod"
+              ports={ { port1: { id: 'port1', type: 'left', }, port2: { id: 'port2', type: 'right', }, }}
+            />
+
+            <SidebarItem
+              type="Replica Set"
+              ports={ { port1: { id: 'port1', type: 'left', }, port2: { id: 'port2', type: 'right', }, }}
+            />
+
+            <SidebarItem
+              type="Stateful Set"
+              ports={ { port1: { id: 'port1', type: 'left', }, port2: { id: 'port2', type: 'right', }, }}
+            />
+
+            <div style={styles.sidebarItemHeadingContainer}>
+              <span style={styles.sidebarItemHeading}> Discovery </span>
+            </div>
+
+            <SidebarItem
+              type="Ingress"
+              ports={ { port1: { id: 'port1', type: 'left', }, port2: { id: 'port2', type: 'right', }, }} 
+            />
+
+            <SidebarItem
+              type="Service"
+              ports={ { port1: { id: 'port1', type: 'left', }, port2: { id: 'port2', type: 'right', }, }}
+            />
+
+            <div style={styles.sidebarItemHeadingContainer}>
+              <span style={styles.sidebarItemHeading}> Containers </span>
+            </div>
+            
+            <SidebarItem
+              type="Container"
+              ports={ { port1: { id: 'port1', type: 'left', }, port2: { id: 'port2', type: 'right', }, }}
+            />
+
+            <SidebarItem
+              type="Init Container"
+              ports={ { port1: { id: 'port1', type: 'left', }, port2: { id: 'port2', type: 'right', }, }}
+            />
+
+            <div style={styles.sidebarItemHeadingContainer}>
+              <span style={styles.sidebarItemHeading}> Storage </span>
+            </div>
+
+            <SidebarItem
+              type="Persistent Volume Claim"
+              ports={ { port1: { id: 'port1', type: 'left', }, port2: { id: 'port2', type: 'right', }, }} 
+            />
+
+          {/* </div> */}
+        </div>
+        
+        <div style={styles.pageParent}>
           
+          <Header/>
+
+          <div style={styles.page}> 
             <div style={styles.flowChartParent}>
               <FlowChart
                 chart={this.state.chart}
@@ -360,17 +363,16 @@ class Flow extends Component {
                 }}
               />
             </div>
+            {
+              <NodeOptionsView node={
+                (Object.keys(this.state.chart.selected).length > 0 && this.state.chart.selected.type === 'node')
+                ? this.state.chart.nodes[this.state.chart.selected.id]
+                : null
+              } onNodeChange={node => {
+                // this.props.setFlowJsonInfo(flowId, selectedFlowEnv, chart, {})
+              }}/>
+            }
           </div>
-
-          {
-            <NodeOptionsView node={
-              (Object.keys(this.state.chart.selected).length > 0 && this.state.chart.selected.type === 'node')
-              ? this.state.chart.nodes[this.state.chart.selected.id]
-              : null
-            } onNodeChange={node => {
-              // this.props.setFlowJsonInfo(flowId, selectedFlowEnv, chart, {})
-            }}/>
-          }
 
         </div>
       </div>
@@ -382,10 +384,69 @@ const styles = {
   root: {
     flex: 1,
     display: 'flex',
-    flexDirection: 'column',
-    maxHeight: '100%',
-    // overflowY: 'hidden'
+    flexDirection: 'row',
+    // height: '100%',
+    // maxHeight: '100vh',
+    maxWidth: '100vw',
+    // position: 'relative'
+    // overflowY: 'auto'
     // position: 'relative',
+  },
+  pageParent: {
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    // maxHeight: '100%',
+    // maxWidth: '100%',
+    maxHeight: '100vh',
+    position: 'relative',
+    overflow: 'hidden'
+  },
+  page: {
+    display: 'flex',
+    flexDirection: 'row',
+    flex: 1,
+    // maxWidth: 'calc(91vw)',
+    maxHeight: '100vh',
+    overflow: 'hidden'
+  },
+  nodeoptions: {
+    display: 'flex',
+    flexDirection: 'column',
+    flex: 1,
+  },
+  flowChartParent: {
+    display: 'flex',
+    flexDirection: 'column',
+    flex: 1,
+    height: '91vh',
+    overflow: 'hidden',
+  },
+  sideBar: {
+    width: 250,
+    // height: '90vh',
+    // height: 'calc(100% - 70px)',
+    background: 'white',
+    display: 'flex',
+    flexDirection: 'column',
+    flexShrink: 0,
+    paddingTop: 12,
+    height: '100vh',
+    // marginRight: 2,
+    borderRight: '1px solid rgb(227, 229, 231)',
+    // borderRight: '3px solid rgb(104, 152, 233)',
+    // oberflowX: 'fixed',
+    position: 'relative',
+    overflowY: 'scroll',
+    padding: 15,
+  },
+  sideBarSection: {
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    overflowY: 'auto',
+    position: 'relative',
+    padding: 15,
   },
   sidebarItemHeading: {
     fontSize: 16,
@@ -406,21 +467,6 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     color: 'rgb(200, 200, 200)',
-  },
-  pageParent: {
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    maxHeight: '100%',
-    position: 'relative',
-  },
-  page: {
-    display: 'flex',
-    flexDirection: 'row',
-    flex: 1,
-    maxWidth: 'calc(100vw)',
-    maxHeight: '100vh',
-    // overflowY: 'auto'
   },
   node: {
     position: 'absolute',
@@ -473,8 +519,8 @@ const styles = {
     border: '3px solid rgb(103, 151, 234)',
   },
   customPort: {
-    width: 10,
-    height: 10,
+    width: 14,
+    height: 14,
     borderRadius: 5,
     // borderRadius: 10,
     // border: '1px solid cornflowerblue',
@@ -511,35 +557,7 @@ const styles = {
     color: 'grey',
     fontWeight: '300',
   },
-  flowChartParent: {
-    display: 'flex',
-    flexDirection: 'column',
-    flex: 1,
-    // height: '100vh',
-    overflow: 'hidden',
-  },
-  sideBar: {
-    width: 250,
-    // height: 'calc(100% - 70px)',
-    background: 'white',
-    display: 'flex',
-    flexDirection: 'column',
-    flexShrink: 0,
-    paddingTop: 12,
-    padding: 4,
-    height: '100vh',
-    // marginRight: 2,
-    borderRight: '1px solid rgb(227, 229, 231)',
-    // borderRight: '3px solid rgb(104, 152, 233)',
-    overflowY: 'auto',
-  },
-  sideBarSection: {
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    overflowY: 'auto',
-    padding: 15,
-  },
+  
   splitIcon: {
     transform: 'rotate(90deg)',
   },
