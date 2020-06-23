@@ -6,18 +6,18 @@ import { jsx } from '@emotion/core'
 import styled from 'styled-components'
 import * as utils from '../../../../lib/utils'
 import constants from '../../../../constants'
-import { AiOutlineFork, AiOutlineFieldTime } from "react-icons/ai"
+import { AiOutlineFork, AiOutlineFieldTime, AiOutlineQuestionCircle } from "react-icons/ai"
 import { TiFlowSwitch } from "react-icons/ti"
 import { MdRefresh } from "react-icons/md"
 import { RiStackLine } from "react-icons/ri"
 import { FiBox } from "react-icons/fi"
+import { Table, Input } from 'semantic-ui-react'
 import { GrStackOverflow } from "react-icons/gr"
 import { BsViewStacked, BsInbox, BsInboxFill } from "react-icons/bs"
 import { FaExchangeAlt, FaDatabase } from "react-icons/fa"
 import { mapValues } from 'lodash'
 import * as actions from '@mrblenny/react-flow-chart/src/container/actions'
-import images from '../../../../images'
-import NodeOptionsView from './components/NodeOptionsView'
+import NodeOptionsView from './components/NodeOptionsView/NodeOptionsView'
 import Header from './components/header'
 
 const CanvasOuterCustom = styled.div`
@@ -156,99 +156,132 @@ class Flow extends Component {
 
     return (
       <div style={styles.root}>
-        <div style={styles.sideBar}>
-          {/* <div style={styles.sideBarSection}> */}
-          <img alt='logo' style={styles.img} src={images.LOGO} />
-            <div style={styles.message}>
-              <div style={styles.palettleTitleContainer}>
-                <span style={styles.palettleTitle}> Palette </span>
+        <Header fileContent={this.state.chart} />
+
+        <div style={styles.pageParent}> 
+          <div style={styles.sideBar}>
+            <div style={styles.sideBarSection1}>
+              <div style={styles.message}>
+                <span style={styles.palettleTitle2}>Manifest Info</span>
+
+                <div style={styles.infoContainer}>
+                  <Table basic='very'>
+                    <Table.Body>
+                      <Table.Row>
+                        <Table.Cell style={styles.cellKey}> Name </Table.Cell>
+                        <Table.Cell style={styles.cellValue}> 
+                          <Input transparent placeholder='sample..' />
+                        </Table.Cell>
+                      </Table.Row>
+                      <Table.Row>
+                        <Table.Cell style={styles.cellKey}> API version </Table.Cell>
+                        <Table.Cell style={styles.cellValue}>
+                          <Input transparent placeholder='apps/v1..' />
+                        </Table.Cell>
+                      </Table.Row>
+                      <Table.Row>
+                        <Table.Cell style={styles.cellKey}> Namespace </Table.Cell>
+                        <Table.Cell style={styles.cellValue}>
+                          <Input transparent placeholder='default..' />
+                        </Table.Cell>
+                      </Table.Row>
+                    </Table.Body>
+                  </Table>
+                </div>
+              </div>      
+            </div>
+
+            <div style={styles.sideBarSection2}>
+              <div style={styles.message}>
+                <div style={styles.palettleTitleContainer}>
+                  <span style={styles.palettleTitle}> Palette </span>
+                  <a style={styles.paletteInfoLink} href={constants.NODES_WIKI_LINK} target="_blank" rel="noopener noreferrer">
+                    <AiOutlineQuestionCircle style={styles.paletteInfoIcon} ></AiOutlineQuestionCircle>
+                  </a>
+                </div>
+                <span style={styles.italic}>Drag and drop these items onto the canvas.</span>
               </div>
-              <span style={styles.italic}>Drag and drop these items onto the canvas.</span>
+              
+              <div style={styles.palette}>
+                <div style={styles.sidebarItemHeadingContainer2}>
+                  <span style={styles.sidebarItemHeading}> Workloads </span>
+                </div>
+
+                <SidebarItem
+                  type="Cron Job"
+                  ports={ { port1: { id: 'port1', type: 'left', }, port2: { id: 'port2', type: 'right', }, }} 
+                />
+
+                <SidebarItem
+                  type="Daemon Set"
+                  ports={ { port1: { id: 'port1', type: 'left', }, port2: { id: 'port2', type: 'right', }, }}
+                />
+
+                <SidebarItem
+                  type="Deployment"
+                  ports={ { port1: { id: 'port1', type: 'left', }, port2: { id: 'port2', type: 'right', }, }}
+                />
+
+                <SidebarItem
+                  type="Job"
+                  ports={ { port1: { id: 'port1', type: 'left', }, port2: { id: 'port2', type: 'right', }, }}
+                />
+                
+                <SidebarItem
+                  type="Pod"
+                  ports={ { port1: { id: 'port1', type: 'left', }, port2: { id: 'port2', type: 'right', }, }}
+                />
+
+                <SidebarItem
+                  type="Replica Set"
+                  ports={ { port1: { id: 'port1', type: 'left', }, port2: { id: 'port2', type: 'right', }, }}
+                />
+
+                <SidebarItem
+                  type="Stateful Set"
+                  ports={ { port1: { id: 'port1', type: 'left', }, port2: { id: 'port2', type: 'right', }, }}
+                />
+
+                <div style={styles.sidebarItemHeadingContainer}>
+                  <span style={styles.sidebarItemHeading}> Discovery </span>
+                </div>
+
+                <SidebarItem
+                  type="Ingress"
+                  ports={ { port1: { id: 'port1', type: 'left', }, port2: { id: 'port2', type: 'right', }, }} 
+                />
+
+                <SidebarItem
+                  type="Service"
+                  ports={ { port1: { id: 'port1', type: 'left', }, port2: { id: 'port2', type: 'right', }, }}
+                />
+
+                <div style={styles.sidebarItemHeadingContainer}>
+                  <span style={styles.sidebarItemHeading}> Containers </span>
+                </div>
+                
+                <SidebarItem
+                  type="Container"
+                  ports={ { port1: { id: 'port1', type: 'left', }, port2: { id: 'port2', type: 'right', }, }}
+                />
+
+                <SidebarItem
+                  type="Init Container"
+                  ports={ { port1: { id: 'port1', type: 'left', }, port2: { id: 'port2', type: 'right', }, }}
+                />
+
+                <div style={styles.sidebarItemHeadingContainer}>
+                  <span style={styles.sidebarItemHeading}> Storage </span>
+                </div>
+
+                <SidebarItem
+                  type="Persistent Volume Claim"
+                  ports={ { port1: { id: 'port1', type: 'left', }, port2: { id: 'port2', type: 'right', }, }} 
+                />
+              </div>
             </div>
-            
-            <div style={styles.sidebarItemHeadingContainer}>
-              <span style={styles.sidebarItemHeading}> Workloads </span>
-            </div>
-
-            <SidebarItem
-              type="Cron Job"
-              ports={ { port1: { id: 'port1', type: 'left', }, port2: { id: 'port2', type: 'right', }, }} 
-            />
-
-            <SidebarItem
-              type="Daemon Set"
-              ports={ { port1: { id: 'port1', type: 'left', }, port2: { id: 'port2', type: 'right', }, }}
-            />
-
-            <SidebarItem
-              type="Deployment"
-              ports={ { port1: { id: 'port1', type: 'left', }, port2: { id: 'port2', type: 'right', }, }}
-            />
-
-            <SidebarItem
-              type="Job"
-              ports={ { port1: { id: 'port1', type: 'left', }, port2: { id: 'port2', type: 'right', }, }}
-            />
-            
-            <SidebarItem
-              type="Pod"
-              ports={ { port1: { id: 'port1', type: 'left', }, port2: { id: 'port2', type: 'right', }, }}
-            />
-
-            <SidebarItem
-              type="Replica Set"
-              ports={ { port1: { id: 'port1', type: 'left', }, port2: { id: 'port2', type: 'right', }, }}
-            />
-
-            <SidebarItem
-              type="Stateful Set"
-              ports={ { port1: { id: 'port1', type: 'left', }, port2: { id: 'port2', type: 'right', }, }}
-            />
-
-            <div style={styles.sidebarItemHeadingContainer}>
-              <span style={styles.sidebarItemHeading}> Discovery </span>
-            </div>
-
-            <SidebarItem
-              type="Ingress"
-              ports={ { port1: { id: 'port1', type: 'left', }, port2: { id: 'port2', type: 'right', }, }} 
-            />
-
-            <SidebarItem
-              type="Service"
-              ports={ { port1: { id: 'port1', type: 'left', }, port2: { id: 'port2', type: 'right', }, }}
-            />
-
-            <div style={styles.sidebarItemHeadingContainer}>
-              <span style={styles.sidebarItemHeading}> Containers </span>
-            </div>
-            
-            <SidebarItem
-              type="Container"
-              ports={ { port1: { id: 'port1', type: 'left', }, port2: { id: 'port2', type: 'right', }, }}
-            />
-
-            <SidebarItem
-              type="Init Container"
-              ports={ { port1: { id: 'port1', type: 'left', }, port2: { id: 'port2', type: 'right', }, }}
-            />
-
-            <div style={styles.sidebarItemHeadingContainer}>
-              <span style={styles.sidebarItemHeading}> Storage </span>
-            </div>
-
-            <SidebarItem
-              type="Persistent Volume Claim"
-              ports={ { port1: { id: 'port1', type: 'left', }, port2: { id: 'port2', type: 'right', }, }} 
-            />
-
-          {/* </div> */}
-        </div>
+          </div>
         
-        <div style={styles.pageParent}>
-          
-          <Header/>
-
           <div style={styles.page}> 
             <div style={styles.flowChartParent}>
               <FlowChart
@@ -369,6 +402,10 @@ class Flow extends Component {
                 ? this.state.chart.nodes[this.state.chart.selected.id]
                 : null
               } onNodeChange={node => {
+                console.log('yoyoy')
+                var chart = this.state.chart
+                chart.nodes[node.id] = node
+                this.setState({"chart": chart})
                 // this.props.setFlowJsonInfo(flowId, selectedFlowEnv, chart, {})
               }}/>
             }
@@ -384,10 +421,11 @@ const styles = {
   root: {
     flex: 1,
     display: 'flex',
-    flexDirection: 'row',
+    flexDirection: 'column',
     // height: '100%',
     // maxHeight: '100vh',
     maxWidth: '100vw',
+    maxHeight: '100%',
     // position: 'relative'
     // overflowY: 'auto'
     // position: 'relative',
@@ -395,20 +433,24 @@ const styles = {
   pageParent: {
     flex: 1,
     display: 'flex',
-    flexDirection: 'column',
+    flexDirection: 'row',
+    maxHeight: '100%',
     // maxHeight: '100%',
-    // maxWidth: '100%',
-    maxHeight: '100vh',
-    position: 'relative',
-    overflow: 'hidden'
+    maxWidth: '100vw',
+    // maxHeight: '91.5vh',
+    // height: 'calc(100vh - 70px)',
+    // position: 'relative',
+    overflowX: 'hidden'
   },
   page: {
     display: 'flex',
     flexDirection: 'row',
     flex: 1,
     // maxWidth: 'calc(91vw)',
-    maxHeight: '100vh',
-    overflow: 'hidden'
+    // maxHeight: '91vh',
+    // height: 'calc(100% - 70px)',
+    maxWidth: 'calc(100vw - 90px)',
+    overflowX: 'hidden'
   },
   nodeoptions: {
     display: 'flex',
@@ -417,36 +459,62 @@ const styles = {
   },
   flowChartParent: {
     display: 'flex',
-    flexDirection: 'column',
+    // flexDirection: 'column',
     flex: 1,
     height: '91vh',
+    // height: 'calc(100% - 70px)',
     overflow: 'hidden',
   },
   sideBar: {
     width: 250,
-    // height: '90vh',
+    // height: 'calc(100% - 70px)',
+    height: '91vh',
     // height: 'calc(100% - 70px)',
     background: 'white',
     display: 'flex',
+    // flex: 1,
     flexDirection: 'column',
     flexShrink: 0,
-    paddingTop: 12,
-    height: '100vh',
+    // paddingTop: 12,
+    // height: '91vh',
     // marginRight: 2,
     borderRight: '1px solid rgb(227, 229, 231)',
     // borderRight: '3px solid rgb(104, 152, 233)',
-    // oberflowX: 'fixed',
-    position: 'relative',
-    overflowY: 'scroll',
-    padding: 15,
+    // oberflowX: 'hidden',
+    // position: 'relative',
+    // overflowY: 'scroll',
+    // padding: 15,
   },
-  sideBarSection: {
-    flex: 1,
+  sideBarSection1: {
+    // flex: 1,
     display: 'flex',
+    // height: '91vh',
+    flexDirection: 'column',
+    // overflowY: 'auto',
+    // position: 'relative',
+    paddingTop: 10,
+    marginBottom: 12
+    // padding: 15,
+  },
+  sideBarSection2: {
+    // flex: 1,
+    display: 'flex',
+    // height: '91vh',
     flexDirection: 'column',
     overflowY: 'auto',
-    position: 'relative',
-    padding: 15,
+    // position: 'relative',
+    // padding: 15,
+  },
+  palette: {
+    display: 'flex',
+    // height: '91vh',
+    flexDirection: 'column',
+    overflowY: 'auto',
+    // paddingLeft: 15,
+    // paddingRight: 15,
+    // paddingTop: 15,
+    padding: 15
+
   },
   sidebarItemHeading: {
     fontSize: 16,
@@ -456,10 +524,13 @@ const styles = {
     marginTop: 24,
     marginBottom: 12
   },
+  sidebarItemHeadingContainer2: {
+    // marginTop: 6,
+    marginBottom: 12
+  },
   img: {
     width: 220,
-    height: 50,
-    marginBottom: 30
+    height: 50
   },
   selectEnvMessage: {
     flex: 1,
@@ -547,10 +618,17 @@ const styles = {
     // marginBottom: 20,
     display: 'flex',
     flexDirection: 'column',
+    padding: 15
   },
   palettleTitle: {
     fontSize: 18,
     fontWeight: '300',
+    marginBottom: 6
+  },
+  palettleTitle2: {
+    fontSize: 18,
+    fontWeight: '300',
+    // marginBottom: 6
   },
   italic: {
     fontSize: 13,
@@ -565,7 +643,7 @@ const styles = {
     transform: 'rotate(-90deg)',
   },
   infoContainer: {
-    marginTop: 15,
+    marginTop: 14,
     display: 'flex',
   },
   infoKeyContainer: {
@@ -659,13 +737,14 @@ const styles = {
   paletteInfoIcon: {
     marginLeft: '5px',
     height: 'unset',
-    width: '17px',
+    width: '15px',
     display: 'flex',
     color: 'black'
   },
   paletteInfoLink: {
     display: 'flex',
-    color: 'black'
+    color: 'black',
+    paddingBottom: 5,
   },
   palettleTitleContainer: {
     display: 'flex',

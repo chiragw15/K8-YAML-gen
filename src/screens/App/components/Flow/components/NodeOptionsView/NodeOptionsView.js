@@ -5,17 +5,18 @@ import {
 import { jsx } from '@emotion/core'
 import { AiOutlineFork, AiOutlineFieldTime } from "react-icons/ai"
 import { TiFlowSwitch } from "react-icons/ti"
-import { MdRefresh } from "react-icons/md"
+import { MdRefresh, MdAddCircleOutline } from "react-icons/md"
 import { RiStackLine } from "react-icons/ri"
 import { FiBox } from "react-icons/fi"
 import { GrStackOverflow } from "react-icons/gr"
 import { BsViewStacked, BsInbox, BsInboxFill } from "react-icons/bs"
 import { FaExchangeAlt, FaDatabase } from "react-icons/fa"
-import { Input} from 'semantic-ui-react'
+import { Input, Form } from 'semantic-ui-react'
+import DeploymentView from './components/DeploymentView'
 
 class NodeOptionsView extends Component {
-
-  getDeploymentView(node) {
+    
+  getNodeView(node) {
     return (
       <div style={styles.width100}>
       
@@ -61,7 +62,7 @@ class NodeOptionsView extends Component {
 
         <div style={styles.header2}>
           <div style={styles.headingParent}>
-            <span style={styles.heading}>{node.type} INFO</span>
+            <span style={styles.heading}> METADATA </span>
           </div>
 
           <div style={styles.selectorContainer}>
@@ -84,6 +85,7 @@ class NodeOptionsView extends Component {
                 }
               }}
             />
+
             {
               node.properties && node.properties.name && (! /^(?!http)[a-z0-9-]*$/.test(node.properties.name) || node.properties.name.startsWith("-")) &&
               <span style={styles.errorMessage}> 
@@ -94,44 +96,124 @@ class NodeOptionsView extends Component {
                 - Node name should not start with http 
               </span>
             }  
+
+            <div style={styles.labelContainer}>
+              <div style={styles.labelParent3}>
+                <span style={styles.label}>Labels</span>
+              </div>
+
+              <MdAddCircleOutline 
+                style={styles.addButton} 
+                size="16" 
+                color="rgb(100, 100, 100)" 
+                onClick={() => { 
+                  if (!node.properties) {
+                    node.properties = {}
+                  }
+                  if (!node.properties.labels) {
+                    node.properties.labels = []
+                  }
+                  node.properties.labels.push({'name': '', 'value': ''})
+                  if (this.props.onNodeChange) {
+                    this.props.onNodeChange(node)
+                  }
+                }}
+              />
+            </div>
+
+            <Form>
+              {
+              (node.properties && node.properties.labels) ? node.properties.labels.map( (label, index) => 
+                <div key={label.name}> 
+                  <Form.Group widths='equal'>
+                    <Form.Input 
+                      fluid 
+                      label='Name' 
+                      placeholder='Name' 
+                      value={label.name ? label.name : ''}
+                      onChange={evt => {
+                        if (!node.properties) {
+                          node.properties = {}
+                        }
+                        if (!node.properties.labels) {
+                          node.properties.labels = []
+                        }
+                        node.properties.labels[index].name = evt.target.value
+                        if (this.props.onNodeChange) {
+                          this.props.onNodeChange(node)
+                        }
+                      }}
+                    />
+                    <Form.Input 
+                      fluid 
+                      label='Value' 
+                      placeholder='Value' 
+                      value={label.value ? label.value : ''}
+                      onChange={evt => {
+                        if (!node.properties) {
+                          node.properties = {}
+                        }
+                        if (!node.properties.labels) {
+                          node.properties.labels = []
+                        }
+                        node.properties.labels[index].value = evt.target.value
+                        if (this.props.onNodeChange) {
+                          this.props.onNodeChange(node)
+                        }
+                      }}
+                    />
+                  </Form.Group> 
+                </div>) : null 
+              } 
+            </Form>
+          </div>
+        </div>
+
+        <div style={styles.header2}>
+          <div style={styles.headingParent}>
+            <span style={styles.heading}> SPEC </span>
+          </div>
+          
+          <div style={styles.selectorContainer}>
+            {
+              node.type === "Cron Job" && <DeploymentView node={node} onSubNodeChange={node => {this.props.onNodeChange(node)}}/>
+            }
+            {
+              node.type === 'Daemon Set' && <RiStackLine style={styles.joinIcon} size="20" color="rgb(100, 100, 100)" />
+            }
+            {
+              node.type === 'Deployment' && <DeploymentView node={node} onSubNodeChange={node => {this.props.onNodeChange(node)}}/>
+            }
+            {
+              node.type === 'Job' && <TiFlowSwitch style={styles.joinIcon} size="20" color="rgb(100, 100, 100)" />
+            }
+            {
+              node.type === 'Pod' && <FiBox size="20" color="rgb(100, 100, 100)" />
+            }
+            {
+              node.type === 'Replica Set' && <GrStackOverflow style={styles.joinIcon} size="18" color="rgb(100, 100, 100)" />
+            }
+            {
+              node.type === 'Stateful Set' && <BsViewStacked size="20" color="rgb(100, 100, 100)" />
+            }
+            {
+              node.type === 'Ingress' && <AiOutlineFork style={styles.splitIcon} size="20" color="rgb(100, 100, 100)" />
+            }
+            {
+              node.type === 'Service' && <FaExchangeAlt size="17" color="rgb(100, 100, 100)" />
+            }
+            {
+              node.type === 'Container' && <BsInboxFill size="20" color="rgb(100, 100, 100)" />
+            }
+            {
+              node.type === 'Init Container' && <BsInbox size="20" color="rgb(100, 100, 100)" />
+            }
+            {
+              node.type === 'Persistent Volume Claim' && <FaDatabase size="18" color="rgb(100, 100, 100)" />
+            }
           </div>
         </div>
       </div>
-    )
-  }
-
-  convertConfigToDict(formData)
-  {
-    var configDict = {...formData}
-    Object.keys(formData).forEach((k) => {
-      if (typeof formData[k] === 'undefined') {
-        formData[k] = ""
-      }
-      var value = {"type": "value", "value": formData[k]}
-      configDict[k] = value
-
-      // TODO: type: "ref"
-    })
-    return configDict
-  }
-
-  convertConfigToValue(configDict)
-  {
-    var configValue = {...configDict}
-    Object.keys(configDict).forEach((k) => {
-      var value = configDict[k]
-      if (value["type"] === "value")
-      configValue[k] = value["value"]
-
-      // TODO: type: "ref"
-    })
-    return configValue
-  }
-
-    
-  getNodeView(node) {
-    return (
-      this.getDeploymentView(node)
     )
   }
 
@@ -191,18 +273,20 @@ const styles = {
     alignItems: 'center',
     padding: 15,
     paddingTop: 20,
-    paddingBottom: 20,
+    // paddingBottom: 20,
   },
   header2: {
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'flex-start',
+    paddingTop: 20
   },
   headingParent: {
     display: 'flex',
     width: '100%',
     justifyContent: 'center',
+    alignItems: "center"
   },
   heading: {
     color: 'rgb(80, 80, 80)',
@@ -217,7 +301,7 @@ const styles = {
     // borderRadius: 4,
     // borderTop: '1px solid rgba(0, 0, 0, 0.07)',
     backgroundColor: 'rgb(245, 247, 248)',
-    // textAlign: 'left',
+    textAlign: 'center',
   },
   heading2: {
     color: 'rgb(80, 80, 80)',
@@ -274,7 +358,15 @@ const styles = {
     display: 'flex',
     marginTop: 10,
     alignItems: 'center',
-  },  
+  },
+  labelContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    marginBottom: 8
+  },
+  addButton: {
+    marginTop: 12,
+  },
   label: {
     flex: 1,
     textAlign: 'left',
@@ -303,6 +395,12 @@ const styles = {
     marginBottom: 5,
     color: 'rgb(50, 50, 50)',
     wordBreak: 'break-word',
+  },
+  labelParent3: {
+    display: 'flex',
+    marginTop: 10,
+    marginRight: 4,
+    alignItems: 'center',
   },
   labelIcon: {
     margin: 4,

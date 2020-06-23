@@ -5,12 +5,17 @@ import {
 import { jsx } from '@emotion/core'
 import { Button, Dropdown } from 'semantic-ui-react'
 import images from '../../../../../images'
-import { FiDownload } from "react-icons/fi"
 
 class Header extends Component {
 
-  downloadFile() {
-
+  downloadFile(fileContent) {
+    console.log(fileContent)
+    var data = new Blob([JSON.stringify(fileContent)], {type: 'text/json'});
+    var csvURL = window.URL.createObjectURL(data);
+    var tempLink = document.createElement('a');
+    tempLink.href = csvURL;
+    tempLink.setAttribute('download', 'filename.json');
+    tempLink.click();
   }
 
   signout() {
@@ -18,12 +23,6 @@ class Header extends Component {
   }
 
   render() {
-
-    const trigger = (
-      <span style={styles.trigger}>
-        <img alt="user" src={images.USER} style={styles.userIcon}/> Hi, Chirag
-      </span>
-    )
 
     const profileOptions = [
       {
@@ -40,10 +39,13 @@ class Header extends Component {
     
     return (
       <div style={styles.root} className={"header-column"}>
-      
+        
+        <div style={styles.col1}>
+          <img alt='logo' style={styles.img} src={images.LOGO} />
+        </div>
         <div style={styles.col2}>
           <Button onClick={() => {
-            this.downloadFile()
+            this.downloadFile(this.props.fileContent)
           }} primary content='Download Manifest' icon='download' labelPosition='left'>
           </Button>
         </div>
@@ -97,6 +99,9 @@ const styles = {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  col1: {
+    flexGrow: 1
   },
   col2: {
     display: 'flex',
@@ -157,7 +162,14 @@ const styles = {
   },
   environmentText: {
     color: 'grey'
-  }
+  },
+  img: {
+    width: 208,
+    height: 45,
+    marginLeft: 15,
+    marginBottom: 10,
+    marginTop: 10
+  },
 }
 
 export default Header
