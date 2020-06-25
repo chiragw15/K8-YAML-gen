@@ -13,6 +13,9 @@ import { BsViewStacked, BsInbox, BsInboxFill } from "react-icons/bs"
 import { FaExchangeAlt, FaDatabase } from "react-icons/fa"
 import { Input, Form } from 'semantic-ui-react'
 import DeploymentView from './components/DeploymentView'
+import ContainerView from './components/ContainerView'
+import ServiceView from './components/ServiceView'
+import PVCView from './components/PVCView'
 
 class NodeOptionsView extends Component {
     
@@ -200,16 +203,16 @@ class NodeOptionsView extends Component {
               node.type === 'Ingress' && <AiOutlineFork style={styles.splitIcon} size="20" color="rgb(100, 100, 100)" />
             }
             {
-              node.type === 'Service' && <FaExchangeAlt size="17" color="rgb(100, 100, 100)" />
+              node.type === 'Service' && <ServiceView node={node} onSubNodeChange={node => {this.props.onNodeChange(node)}}/>
             }
             {
-              node.type === 'Container' && <BsInboxFill size="20" color="rgb(100, 100, 100)" />
+              node.type === 'Container' && <ContainerView node={node} onSubNodeChange={node => {this.props.onNodeChange(node)}}/>
             }
             {
               node.type === 'Init Container' && <BsInbox size="20" color="rgb(100, 100, 100)" />
             }
             {
-              node.type === 'Persistent Volume Claim' && <FaDatabase size="18" color="rgb(100, 100, 100)" />
+              node.type === 'Persistent Volume Claim' && <PVCView node={node} onSubNodeChange={node => {this.props.onNodeChange(node)}}/>
             }
           </div>
         </div>
