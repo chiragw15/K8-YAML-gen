@@ -36,7 +36,6 @@ const CanvasOuterCustom = styled.div`
 `
 
 const PortCustom = (props: IPortDefaultProps) => {
-  // console.log("props", props)
   return (
     <div style={{
       ...styles.customPort,
@@ -51,7 +50,7 @@ class Flow extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {chart: this.getChart()};
+    this.state = {chart: this.getChart(), manifestInfo: {apiVersion: 'apps/v1', name: 'sample', namespace: 'default'}};
   }
 
   NodeInnerCustom = ({ node, config }) => {
@@ -103,8 +102,8 @@ class Flow extends Component {
             node.type === 'Persistent Volume Claim' && <FaDatabase size="18" color="rgb(100, 100, 100)" />
           }
           </div>
-          <span style={styles.nodeInnerSpan}> &nbsp;&nbsp;&nbsp;&nbsp;{node.properties && node.properties.name ? (
-            `${node.type} - ${node.properties.name}`
+          <span style={styles.nodeInnerSpan}> &nbsp;&nbsp;&nbsp;&nbsp;{node.properties && node.properties.metadata && node.properties.metadata.name ? (
+            `${node.type} - ${node.properties.metadata.name}`
           ) : node.type}&nbsp;&nbsp;&nbsp;&nbsp; </span>
         </div>
       </div>
@@ -123,20 +122,14 @@ class Flow extends Component {
         ...chart, 
         ...func(...args)(chart)
       }
-      console.log('chirag')
-      // console.log(chart)
-      this.setState({"chart": chart})
-      // console.log(this.state.chart)
-      // this.props.setFlowJsonInfo(1, 'master', chart, {})
+      this.setState({"chart": chart, "manifestInfo": this.state.manifestInfo})
     } 
   )
 
   NodeCustom = React.forwardRef(({ node, children, ...otherProps }: INodeDefaultProps, ref: React.Ref<HTMLDivElement>) => {
-    // const chart = this.getChart()
     var chart = this.state.chart
     delete otherProps['isSelected']
     
-    // console.log("children", children)
     return (
       <div ref={ref} {...otherProps} style={{
         ...styles.node,
@@ -156,7 +149,7 @@ class Flow extends Component {
 
     return (
       <div style={styles.root}>
-        <Header fileContent={this.state.chart} />
+        <Header flowJson={this.state.chart} manifestInfo={this.state.manifestInfo}/>
 
         <div style={styles.pageParent}> 
           <div style={styles.sideBar}>
@@ -170,19 +163,43 @@ class Flow extends Component {
                       <Table.Row>
                         <Table.Cell style={styles.cellKey}> Name </Table.Cell>
                         <Table.Cell style={styles.cellValue}> 
-                          <Input transparent placeholder='sample..' />
+                          <Input 
+                            transparent 
+                            placeholder='sample..' 
+                            onChange={evt => {
+                              var manifestInfo = this.state.manifestInfo
+                              manifestInfo.name = evt.target.value
+                              this.setState({"chart": this.state.chart, "manifestInfo": manifestInfo})
+                            }}
+                          />
                         </Table.Cell>
                       </Table.Row>
                       <Table.Row>
                         <Table.Cell style={styles.cellKey}> API version </Table.Cell>
                         <Table.Cell style={styles.cellValue}>
-                          <Input transparent placeholder='apps/v1..' />
+                          <Input 
+                            transparent 
+                            placeholder='apps/v1..'
+                            onChange={evt => {
+                              var manifestInfo = this.state.manifestInfo
+                              manifestInfo.apiVersion = evt.target.value
+                              this.setState({"chart": this.state.chart, "manifestInfo": manifestInfo})
+                            }} 
+                          />
                         </Table.Cell>
                       </Table.Row>
                       <Table.Row>
                         <Table.Cell style={styles.cellKey}> Namespace </Table.Cell>
                         <Table.Cell style={styles.cellValue}>
-                          <Input transparent placeholder='default..' />
+                          <Input 
+                            transparent 
+                            placeholder='default..'
+                            onChange={evt => {
+                              var manifestInfo = this.state.manifestInfo
+                              manifestInfo.namespace = evt.target.value
+                              this.setState({"chart": this.state.chart, "manifestInfo": manifestInfo})
+                            }} 
+                          />
                         </Table.Cell>
                       </Table.Row>
                     </Table.Body>
@@ -402,10 +419,9 @@ class Flow extends Component {
                 ? this.state.chart.nodes[this.state.chart.selected.id]
                 : null
               } onNodeChange={node => {
-                console.log('yoyoy')
                 var chart = this.state.chart
                 chart.nodes[node.id] = node
-                this.setState({"chart": chart})
+                this.setState({"chart": chart, "manifestInfo": this.state.manifestInfo})
                 // this.props.setFlowJsonInfo(flowId, selectedFlowEnv, chart, {})
               }}/>
             }

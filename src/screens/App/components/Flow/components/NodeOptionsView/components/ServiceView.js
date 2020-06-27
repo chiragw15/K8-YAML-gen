@@ -32,12 +32,15 @@ class ServiceView extends Component {
             fluid 
             selection 
             options={serviceOptions} 
-            value={node.properties ? node.properties.serviceType : ''}
+            value={node.properties && node.properties.spec ? node.properties.spec.type : ''}
             onChange={(evt,data) => {
               if (!node.properties) {
                 node.properties = {}
               }
-              node.properties.serviceType = data.value
+              if (!node.properties.spec) {
+                node.properties.spec = {}
+              }
+              node.properties.spec.type = data.value
               if (this.props.onSubNodeChange) {
                 this.props.onSubNodeChange(node)
               }
@@ -59,10 +62,13 @@ class ServiceView extends Component {
               if (!node.properties) {
                 node.properties = {}
               }
-              if (!node.properties.ports) {
-                node.properties.ports = []
+              if (!node.properties.spec) {
+                node.properties.spec = {}
               }
-              node.properties.ports.push({'port': '', 'targetPort': '', 'name': '', 'protocol': ''})
+              if (!node.properties.spec.ports) {
+                node.properties.spec.ports = []
+              }
+              node.properties.spec.ports.push({'port': '', 'targetPort': '', 'name': '', 'protocol': ''})
               if (this.props.onSubNodeChange) {
                 this.props.onSubNodeChange(node)
               }
@@ -72,8 +78,8 @@ class ServiceView extends Component {
 
         <Form>
           {
-          (node.properties && node.properties.ports) ? node.properties.ports.map( (port, index) => 
-            <div key={port.port}> 
+          (node.properties && node.properties.spec && node.properties.spec.ports) ? node.properties.spec.ports.map( (port, index) => 
+            <div key={index}> 
               <Form.Group widths='equal'>
                 <Form.Input 
                   fluid 
@@ -84,10 +90,13 @@ class ServiceView extends Component {
                     if (!node.properties) {
                       node.properties = {}
                     }
-                    if (!node.properties.ports) {
-                      node.properties.ports = []
+                    if (!node.properties.spec) {
+                      node.properties.spec = {}
                     }
-                    node.properties.ports[index]['port'] = evt.target.value
+                    if (!node.properties.spec.ports) {
+                      node.properties.spec.ports = []
+                    }
+                    node.properties.spec.ports[index]['port'] = evt.target.value
                     if (this.props.onSubNodeChange) {
                       this.props.onSubNodeChange(node)
                     }
@@ -102,10 +111,13 @@ class ServiceView extends Component {
                     if (!node.properties) {
                       node.properties = {}
                     }
-                    if (!node.properties.ports) {
-                      node.properties.ports = []
+                    if (!node.properties.spec) {
+                      node.properties.spec = {}
                     }
-                    node.properties.ports[index].targetPort = evt.target.value
+                    if (!node.properties.spec.ports) {
+                      node.properties.spec.ports = []
+                    }
+                    node.properties.spec.ports[index].targetPort = evt.target.value
                     if (this.props.onSubNodeChange) {
                       this.props.onSubNodeChange(node)
                     }
@@ -123,10 +135,13 @@ class ServiceView extends Component {
                     if (!node.properties) {
                       node.properties = {}
                     }
-                    if (!node.properties.ports) {
-                      node.properties.ports = []
+                    if (!node.properties.spec) {
+                      node.properties.spec = {}
                     }
-                    node.properties.ports[index].name = evt.target.value
+                    if (!node.properties.spec.ports) {
+                      node.properties.spec.ports = []
+                    }
+                    node.properties.spec.ports[index].name = evt.target.value
                     if (this.props.onSubNodeChange) {
                       this.props.onSubNodeChange(node)
                     }
@@ -142,10 +157,13 @@ class ServiceView extends Component {
                     if (!node.properties) {
                       node.properties = {}
                     }
-                    if (!node.properties.ports) {
-                      node.properties.ports = []
+                    if (!node.properties.spec) {
+                      node.properties.spec = {}
                     }
-                    node.properties.ports[index].protocol = data.value
+                    if (!node.properties.spec.ports) {
+                      node.properties.spec.ports = []
+                    }
+                    node.properties.spec.ports[index].protocol = data.value
                     if (this.props.onSubNodeChange) {
                       this.props.onSubNodeChange(node)
                     }

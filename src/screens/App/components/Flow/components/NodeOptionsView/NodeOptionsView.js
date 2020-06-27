@@ -77,12 +77,15 @@ class NodeOptionsView extends Component {
               style={styles.textField} 
               placeholder={"Enter " + node.type + " Name"}
               variant="filled" 
-              value={node.properties ? node.properties.name : ''}
+              value={node.properties && node.properties.metadata ? node.properties.metadata.name : ''}
               onChange={evt => {
                 if (!node.properties) {
                   node.properties = {}
                 }
-                node.properties.name = evt.target.value
+                if (!node.properties.metadata) {
+                  node.properties.metadata = {}
+                }
+                node.properties.metadata.name = evt.target.value
                 if (this.props.onNodeChange) {
                   this.props.onNodeChange(node)
                 }
@@ -113,10 +116,13 @@ class NodeOptionsView extends Component {
                   if (!node.properties) {
                     node.properties = {}
                   }
-                  if (!node.properties.labels) {
-                    node.properties.labels = []
+                  if (!node.properties.metadata) {
+                    node.properties.metadata = {}
                   }
-                  node.properties.labels.push({'name': '', 'value': ''})
+                  if (!node.properties.metadata.labels) {
+                    node.properties.metadata.labels = []
+                  }
+                  node.properties.metadata.labels.push({'name': '', 'value': ''})
                   if (this.props.onNodeChange) {
                     this.props.onNodeChange(node)
                   }
@@ -126,22 +132,25 @@ class NodeOptionsView extends Component {
 
             <Form>
               {
-              (node.properties && node.properties.labels) ? node.properties.labels.map( (label, index) => 
-                <div key={label.name}> 
+              (node.properties && node.properties.metadata && node.properties.metadata.labels) ? node.properties.metadata.labels.map( (label, index) => 
+                <div key={index}> 
                   <Form.Group widths='equal'>
                     <Form.Input 
                       fluid 
                       label='Name' 
                       placeholder='Name' 
-                      value={label.name ? label.name : ''}
+                      value={label['name'] || ''}
                       onChange={evt => {
                         if (!node.properties) {
                           node.properties = {}
                         }
-                        if (!node.properties.labels) {
-                          node.properties.labels = []
+                        if (!node.properties.metadata) {
+                          node.properties.metadata = {}
                         }
-                        node.properties.labels[index].name = evt.target.value
+                        if (!node.properties.metadata.labels) {
+                          node.properties.metadata.labels = []
+                        }
+                        node.properties.metadata.labels[index]['name'] = evt.target.value
                         if (this.props.onNodeChange) {
                           this.props.onNodeChange(node)
                         }
@@ -156,10 +165,13 @@ class NodeOptionsView extends Component {
                         if (!node.properties) {
                           node.properties = {}
                         }
-                        if (!node.properties.labels) {
-                          node.properties.labels = []
+                        if (!node.properties.metadata) {
+                          node.properties.metadata = {}
                         }
-                        node.properties.labels[index].value = evt.target.value
+                        if (!node.properties.metadata.labels) {
+                          node.properties.metadata.labels = []
+                        }
+                        node.properties.metadata.labels[index].value = evt.target.value
                         if (this.props.onNodeChange) {
                           this.props.onNodeChange(node)
                         }
@@ -222,8 +234,7 @@ class NodeOptionsView extends Component {
 
   render() {
     const node = this.props.node
-
-    console.log("node", node)
+    
     return (
       <div style={{
         ...styles.root,

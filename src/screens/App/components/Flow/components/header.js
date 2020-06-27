@@ -5,21 +5,134 @@ import {
 import { jsx } from '@emotion/core'
 import { Button, Dropdown } from 'semantic-ui-react'
 import images from '../../../../../images'
+import YAMLGen from '../yamlGen'
+// import YAML from 'json-to-pretty-yaml'
+
+const YAML = require('json-to-pretty-yaml');
 
 class Header extends Component {
 
-  downloadFile(fileContent) {
-    console.log(fileContent)
-    var data = new Blob([JSON.stringify(fileContent)], {type: 'text/json'});
+  downloadFile(fileContent, filename) {
+    var data = new Blob([fileContent], {type: 'text/yaml'});
     var csvURL = window.URL.createObjectURL(data);
     var tempLink = document.createElement('a');
     tempLink.href = csvURL;
-    tempLink.setAttribute('download', 'filename.json');
+    tempLink.setAttribute('download', filename + '.yaml');
     tempLink.click();
   }
 
-  signout() {
+  createKubeObject(node, manifestInfo) {
+    node.properties.kind = node.type.replace(/ /g,'')
+    node.properties.apiVersion = manifestInfo.apiVersion
+    node.properties.metadata.namespace = manifestInfo.namespace
+    var labels = {}
+    if ('labels' in node.properties.metadata) {
+      for (var l of node.properties.metadata.labels) {
+        labels[l['name']] = l['value']
+      }
+      node.properties.metadata.labels = labels
+    }
 
+    if (node.type === 'Persistent Volume Claim') {
+      if ('accessModes' in node.properties.spec) {
+        var accesModes = []
+        for (var key in node.properties.spec.accessModes) {
+          if (node.properties.spec.accessModes[key]) {
+            accesModes.push(key)
+          }
+        }
+        node.properties.spec.accessModes = accesModes
+      }
+    }
+
+    return node.properties
+  }
+
+  sortObject(obj) {
+    return Object.keys(obj).sort().reduce(function (result, key) {
+        result[key] = obj[key];
+        return result;
+    }, {});
+  }
+
+  getTemplateFromContainers(containers, container_keys, graph, flowJson) {
+    var template = {}
+
+    for(var container of containers) {
+      if ('metadata' in container && 'labels' in container.metadata) {
+        if (!('metadata' in template)) {
+          template.metadata = {}
+          template.metadata.labels = {}
+        }
+        for(var label of container.metadata.labels) {
+          template.metadata.labels[label.name] = label.value
+        }
+      }
+    }
+
+    template.spec = {}
+    template.spec.containers = []
+    for(var container of containers) {
+      var temp_container = {}
+      if ('metadata' in container ) {
+        temp_container.name = container.metadata.name
+      }
+
+      for (var key in container) {
+        if (key === 'metadata') continue
+        temp_container[key] = container[key]
+      }
+      template.spec.containers.push(temp_container)
+    }
+
+    var c = 0
+    for (var key of container_keys) {
+      for (var neighbour of graph.AdjList[key]) {
+        if (flowJson.nodes[neighbour].type === 'Persistent Volume Claim') {
+          if ('volumeMounts' in template.spec.containers[c]) {
+            if (!('volumes' in template.spec)) {
+              template.spec.volumes = []
+            }
+            for (var vol of template.spec.containers[c].volumeMounts)
+              template.spec.volumes.push({name: vol.name, persistentVolumeClaim: {claimName: flowJson.nodes[neighbour].properties.metadata.name}})
+          }
+        }
+      }
+      c += 1
+    }
+
+    return template
+  }
+
+
+  prepareYAMLFile(flowJson, manifestInfo) {
+    var ygen = new YAMLGen()
+    var graph = ygen.createGraphFromJson(flowJson)
+    var sorted = graph.topologicalSort()
+    var fileContent = ""
+    for (var v of sorted) {
+      
+      if (flowJson.nodes[v].type === 'Container') {
+        continue
+      }
+      
+      var kubeObj = this.createKubeObject(flowJson.nodes[v], manifestInfo)
+
+      var containers = []
+      var container_keys = []
+      if (flowJson.nodes[v].type === 'Deployment') {
+        for (var container of graph.AdjList[v]) {
+          containers.push(flowJson.nodes[container].properties)
+          container_keys.push(container)
+        }
+        kubeObj.spec.template = this.getTemplateFromContainers(containers, container_keys, graph, flowJson)
+      }  
+
+      var yamlObj = YAML.stringify(this.sortObject(kubeObj))  
+      fileContent += yamlObj.replace(/\"/g, "") + "\n" + "---" + "\n"
+    }
+
+    this.downloadFile(fileContent, manifestInfo.name)
   }
 
   render() {
@@ -45,7 +158,7 @@ class Header extends Component {
         </div>
         <div style={styles.col2}>
           <Button onClick={() => {
-            this.downloadFile(this.props.fileContent)
+            this.prepareYAMLFile(this.props.flowJson, this.props.manifestInfo)
           }} primary content='Download Manifest' icon='download' labelPosition='left'>
           </Button>
         </div>

@@ -49,7 +49,7 @@ class DeploymentView extends Component {
             fluid 
             selection 
             options={strategyOptions} 
-            value={node.properties && node.properties.spec ? node.properties.spec.strategy : ''}
+            value={node.properties && node.properties.spec && node.properties.spec.strategy ? node.properties.spec.strategy.type : ''}
             onChange={(evt,data) => {
               if (!node.properties) {
                 node.properties = {}
@@ -57,7 +57,10 @@ class DeploymentView extends Component {
               if (!node.properties.spec) {
                 node.properties.spec = {}
               }
-              node.properties.spec.strategy = data.value
+              if (!node.properties.spec.strategy) {
+                node.properties.spec.strategy = {}
+              }
+              node.properties.spec.strategy.type = data.value
               if (this.props.onSubNodeChange) {
                 this.props.onSubNodeChange(node)
               }
@@ -66,7 +69,7 @@ class DeploymentView extends Component {
 
         </div>
 
-        { (node.properties && node.properties.spec && node.properties.spec.strategy && node.properties.spec.strategy === 'Rolling Update') ?
+        { (node.properties && node.properties.spec && node.properties.spec.strategy && node.properties.spec.strategy.type === 'Rolling Update') ?
           <div style={styles.rollingUpdateParent}>
             <div >
               <div style={styles.labelParent}>
@@ -78,7 +81,7 @@ class DeploymentView extends Component {
                 style={styles.textField} 
                 placeholder={"Enter Max Surge"}
                 variant="filled" 
-                value={node.properties && node.properties.spec ? node.properties.spec.surge : ''}
+                value={node.properties && node.properties.spec && node.properties.spec.strategy && node.properties.spec.strategy.rollingUpdate && node.properties.spec.strategy.rollingUpdate.maxSurge ? node.properties.spec.strategy.rollingUpdate.maxSurge : ''}
                 onChange={evt => {
                   if (!node.properties) {
                     node.properties = {}
@@ -86,7 +89,13 @@ class DeploymentView extends Component {
                   if (!node.properties.spec) {
                     node.properties.spec = {}
                   }
-                  node.properties.spec.surge = evt.target.value
+                  if (!node.properties.spec.strategy) {
+                    node.properties.spec.strategy = {}
+                  }
+                  if (!node.properties.spec.strategy.rollingUpdate) {
+                    node.properties.spec.strategy.rollingUpdate = {}
+                  }
+                  node.properties.spec.strategy.rollingUpdate.maxSurge = evt.target.value
                   if (this.props.onSubNodeChange) {
                     this.props.onSubNodeChange(node)
                   }
@@ -104,7 +113,7 @@ class DeploymentView extends Component {
                 style={styles.textField} 
                 placeholder={"Enter Max Unavailable"}
                 variant="filled" 
-                value={node.properties && node.properties.spec ? node.properties.spec.unavailable : ''}
+                value={node.properties && node.properties.spec && node.properties.spec.strategy && node.properties.spec.strategy.rollingUpdate && node.properties.spec.strategy.rollingUpdate.maxUnavailable ? node.properties.spec.strategy.rollingUpdate.maxUnavailable : ''}
                 onChange={evt => {
                   if (!node.properties) {
                     node.properties = {}
@@ -112,7 +121,13 @@ class DeploymentView extends Component {
                   if (!node.properties.spec) {
                     node.properties.spec = {}
                   }
-                  node.properties.spec.unavailable = evt.target.value
+                  if (!node.properties.spec.strategy) {
+                    node.properties.spec.strategy = {}
+                  }
+                  if (!node.properties.spec.strategy.rollingUpdate) {
+                    node.properties.spec.strategy.rollingUpdate = {}
+                  }
+                  node.properties.spec.strategy.rollingUpdate.maxUnavailable = evt.target.value
                   if (this.props.onSubNodeChange) {
                     this.props.onSubNodeChange(node)
                   }

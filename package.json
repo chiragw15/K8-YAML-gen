@@ -13,6 +13,7 @@
     "ace-builds": "^1.4.8",
     "ajv": "^6.12.0",
     "bootstrap": "^4.4.1",
+    "json-to-pretty-yaml": "^1.2.2",
     "lodash": "^4.17.15",
     "prop-types": "^15.7.2",
     "query-string": "^6.10.1",

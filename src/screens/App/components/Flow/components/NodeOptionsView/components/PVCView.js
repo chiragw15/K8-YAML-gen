@@ -8,11 +8,9 @@ class PVCView extends Component {
   render() {
     const node = this.props.node
     const strategyOptions = [
-      {'key': 'a', 'value': 'File System', 'text': 'File System'},
-      {'key': 'b', 'value': 'Block Device', 'text': 'Block Device'}
+      {'key': 'a', 'value': 'Filesystem', 'text': 'File System'},
+      {'key': 'b', 'value': 'Block', 'text': 'Block Device'}
     ]
-
-    var accesModes = []
 
     return (
       <div>
@@ -25,15 +23,21 @@ class PVCView extends Component {
           style={styles.textField} 
           placeholder={"Enter max size"}
           variant="filled" 
-          value={node.properties && node.properties.capacity ? node.properties.capacity.storage : ''}
+          value={node.properties && node.properties.spec && node.properties.spec.resources && node.properties.spec.resources.requests ? node.properties.spec.resources.requests.storage : ''}
           onChange={evt => {
             if (!node.properties) {
               node.properties = {}
             }
-            if (!node.properties.capacity) {
-              node.properties.capacity = {}
+            if (!node.properties.spec) {
+              node.properties.spec = {}
             }
-            node.properties.capacity.storage = evt.target.value
+            if (!node.properties.spec.resources) {
+              node.properties.spec.resources = {}
+            }
+            if (!node.properties.spec.resources.requests) {
+              node.properties.spec.resources.requests = {}
+            }
+            node.properties.spec.resources.requests.storage = evt.target.value
             if (this.props.onSubNodeChange) {
               this.props.onSubNodeChange(node)
             }
@@ -51,12 +55,15 @@ class PVCView extends Component {
             fluid 
             selection 
             options={strategyOptions} 
-            value={node.properties ? node.properties.volumeMode : ''}
+            value={node.properties && node.properties.spec ? node.properties.spec.volumeMode : ''}
             onChange={(evt,data) => {
               if (!node.properties) {
                 node.properties = {}
               }
-              node.properties.volumeMode= data.value
+              if (!node.properties.spec) {
+                node.properties.spec = {}
+              }
+              node.properties.spec.volumeMode= data.value
               if (this.props.onSubNodeChange) {
                 this.props.onSubNodeChange(node)
               }
@@ -74,15 +81,18 @@ class PVCView extends Component {
           <Checkbox 
             style={styles.checkbox}
             label='ReadWriteOnce'
-            checked={node.properties && node.properties.accesModes ? node.properties.accesModes.ReadWriteOnce : false}
+            checked={node.properties && node.properties.spec && node.properties.spec.accessModes ? node.properties.spec.accessModes.ReadWriteOnce : false}
             onChange={(evt,data) => {
               if (!node.properties) {
                 node.properties = {}
               }
-              if (!node.properties.accesModes) {
-                node.properties.accesModes = {}
+              if (!node.properties.spec) {
+                node.properties.spec = {}
               }
-              node.properties.accesModes.ReadWriteOnce = data.checked
+              if (!node.properties.spec.accessModes) {
+                node.properties.spec.accessModes = {}
+              }
+              node.properties.spec.accessModes.ReadWriteOnce = data.checked
               if (this.props.onSubNodeChange) {
                 this.props.onSubNodeChange(node)
               }
@@ -92,15 +102,18 @@ class PVCView extends Component {
           <Checkbox 
             style={styles.checkbox}
             label='ReadOnlyMany' 
-            checked={node.properties && node.properties.accesModes ? node.properties.accesModes.ReadOnlyMany : false}
+            checked={node.properties && node.properties.spec && node.properties.spec.accessModes ? node.properties.spec.accessModes.ReadOnlyMany : false}
             onChange={(evt,data) => {
               if (!node.properties) {
                 node.properties = {}
               }
-              if (!node.properties.accesModes) {
-                node.properties.accesModes = {}
+              if (!node.properties.spec) {
+                node.properties.spec = {}
               }
-              node.properties.accesModes.ReadOnlyMany = data.checked
+              if (!node.properties.spec.accessModes) {
+                node.properties.spec.accessModes = {}
+              }
+              node.properties.spec.accessModes.ReadOnlyMany = data.checked
               if (this.props.onSubNodeChange) {
                 this.props.onSubNodeChange(node)
               }
@@ -110,15 +123,18 @@ class PVCView extends Component {
           <Checkbox 
             style={styles.checkbox}
             label='ReadWriteMany' 
-            checked={node.properties && node.properties.accesModes ? node.properties.accesModes.ReadWriteMany : false}
+            checked={node.properties && node.properties.spec && node.properties.spec.accessModes ? node.properties.spec.accessModes.ReadWriteMany : false}
             onChange={(evt,data) => {
               if (!node.properties) {
                 node.properties = {}
               }
-              if (!node.properties.accesModes) {
-                node.properties.accesModes = {}
+              if (!node.properties.spec) {
+                node.properties.spec = {}
               }
-              node.properties.accesModes.ReadWriteMany = data.checked
+              if (!node.properties.spec.accessModes) {
+                node.properties.spec.accessModes = {}
+              }
+              node.properties.spec.accessModes.ReadWriteMany = data.checked
               if (this.props.onSubNodeChange) {
                 this.props.onSubNodeChange(node)
               }

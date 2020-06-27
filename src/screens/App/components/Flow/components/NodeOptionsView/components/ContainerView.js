@@ -8,6 +8,7 @@ class ContainerView extends Component {
 
   render() {
     const node = this.props.node
+    console.log(node)
     const protocolOptions = [
       {'key': 'a', 'value': 'TCP', 'text': 'TCP'},
       {'key': 'b', 'value': 'UDP', 'text': 'UDP'}
@@ -63,7 +64,7 @@ class ContainerView extends Component {
         <Form>
           {
           (node.properties && node.properties.ports) ? node.properties.ports.map( (port, index) => 
-            <div key={port.containerPort}> 
+            <div key={index}> 
               <Form.Group widths='equal'>
                 <Form.Input 
                   fluid 
@@ -134,7 +135,7 @@ class ContainerView extends Component {
         <Form>
           {
           (node.properties && node.properties.envs) ? node.properties.envs.map( (env, index) => 
-            <div key={env.name}> 
+            <div key={index}> 
               <Form.Group widths='equal'>
                 <Form.Input 
                   fluid 
@@ -167,6 +168,76 @@ class ContainerView extends Component {
                       node.properties.envs = []
                     }
                     node.properties.envs[index].value = evt.target.value
+                    if (this.props.onSubNodeChange) {
+                      this.props.onSubNodeChange(node)
+                    }
+                  }}
+                />
+              </Form.Group> 
+            </div>) : null 
+          } 
+        </Form>
+
+        <div style={styles.labelContainer}>
+          <div style={styles.labelParent3}>
+            <span style={styles.label}>Volumes</span>
+          </div>
+
+          <MdAddCircleOutline 
+            style={styles.addButton} 
+            size="16" 
+            color="rgb(100, 100, 100)" 
+            onClick={() => { 
+              if (!node.properties) {
+                node.properties = {}
+              }
+              if (!node.properties.volumeMounts) {
+                node.properties.volumeMounts = []
+              }
+              node.properties.volumeMounts.push({'name': '', 'mountPath': ''})
+              if (this.props.onSubNodeChange) {
+                this.props.onSubNodeChange(node)
+              }
+            }}
+          />
+        </div>
+
+        <Form>
+          {
+          (node.properties && node.properties.volumeMounts) ? node.properties.volumeMounts.map( (volumeMount, index) => 
+            <div key={index}> 
+              <Form.Group widths='equal'>
+                <Form.Input 
+                  fluid 
+                  label='Name' 
+                  placeholder='Name' 
+                  value={volumeMount.name ? volumeMount.name : ''}
+                  onChange={evt => {
+                    if (!node.properties) {
+                      node.properties = {}
+                    }
+                    if (!node.properties.volumeMounts) {
+                      node.properties.volumeMounts = []
+                    }
+                    node.properties.volumeMounts[index].name = evt.target.value
+                    if (this.props.onSubNodeChange) {
+                      this.props.onSubNodeChange(node)
+                    }
+                  }}
+                />
+                <Form.Input 
+                  fluid 
+                  label='Mount Path' 
+                  placeholder='Mount Path' 
+                  value={volumeMount.mountPath ? volumeMount.mountPath : ''}
+                  onChange={evt => {
+                    if (!node.properties) {
+                      node.properties = {}
+                    }
+                    if (!node.properties.volumeMounts) {
+                      node.properties.volumeMounts = []
+                    }
+                    node.properties.volumeMounts[index].mountPath = evt.target.value
                     if (this.props.onSubNodeChange) {
                       this.props.onSubNodeChange(node)
                     }
