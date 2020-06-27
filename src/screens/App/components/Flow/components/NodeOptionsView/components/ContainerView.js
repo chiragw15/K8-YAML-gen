@@ -8,7 +8,7 @@ class ContainerView extends Component {
 
   render() {
     const node = this.props.node
-    console.log(node)
+    
     const protocolOptions = [
       {'key': 'a', 'value': 'TCP', 'text': 'TCP'},
       {'key': 'b', 'value': 'UDP', 'text': 'UDP'}
