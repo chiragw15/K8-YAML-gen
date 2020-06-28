@@ -32,7 +32,7 @@ export default class Graph {
             visited[key] = false 
         }
   
-        for (var key in this.AdjList) { 
+        for (key in this.AdjList) { 
             if (!visited[key]) { 
                 this.topologicalSortUtil(key, visited)
             }
