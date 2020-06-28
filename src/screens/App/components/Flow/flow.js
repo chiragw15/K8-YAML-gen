@@ -179,7 +179,7 @@ class Flow extends Component {
                         <Table.Cell style={styles.cellValue}>
                           <Input 
                             transparent 
-                            placeholder='apps/v1..'
+                            placeholder='v1..'
                             onChange={evt => {
                               var manifestInfo = this.state.manifestInfo
                               manifestInfo.apiVersion = evt.target.value

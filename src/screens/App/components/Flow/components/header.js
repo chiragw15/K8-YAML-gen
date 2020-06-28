@@ -32,6 +32,13 @@ class Header extends Component {
     var graph = ygen.createGraphFromJson(flowJson)
     var sorted = graph.topologicalSort()
     var fileContent = ""
+
+    if (manifestInfo.namespace !== 'default') {
+      var manifest = {apiVersion: manifestInfo.apiVersion, kind: "Namespace", metadata: {name: manifestInfo.namespace}}
+      var yamlObj = YAML.stringify(this.sortObject(manifest))  
+      fileContent += yamlObj.replace(/\"/g, "") + "\n" + "---" + "\n"
+    }
+
     for (var v of sorted) {
       
       if (flowJson.nodes[v].type === 'Container') {
@@ -47,7 +54,7 @@ class Header extends Component {
           containers.push(flowJson.nodes[container].properties)
           container_keys.push(container)
         }
-        kubeObj.spec.template = ygen.getTemplateFromContainers(containers, container_keys, graph, flowJson)
+        kubeObj.spec.template = ygen.getTemplateFromContainers(containers, container_keys, graph, flowJson, manifestInfo)
       }  
 
       var yamlObj = YAML.stringify(this.sortObject(kubeObj))  

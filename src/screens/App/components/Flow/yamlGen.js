@@ -21,7 +21,8 @@ export default class YAMLGen {
   createKubeObject(node, manifestInfo) {
     node.properties.kind = node.type.replace(/ /g,'')
     node.properties.apiVersion = manifestInfo.apiVersion
-    node.properties.metadata.namespace = manifestInfo.namespace
+    if (manifestInfo.namespace !== 'default')
+      node.properties.metadata.namespace = manifestInfo.namespace
     var labels = {}
     if ('labels' in node.properties.metadata) {
       for (var l of node.properties.metadata.labels) {
@@ -42,12 +43,18 @@ export default class YAMLGen {
       }
     }
 
+    if (node.type === 'Deployment') {
+      node.properties.apiVersion = 'extensions/' + node.properties.apiVersion + 'beta1'
+      node.properties.spec.selector = {matchLabels: {name: manifestInfo.name}}
+    }
+
     return node.properties
   }
 
-  getTemplateFromContainers(containers, container_keys, graph, flowJson) {
+  getTemplateFromContainers(containers, container_keys, graph, flowJson, manifestInfo) {
     var template = {}
 
+    template.metadata = {labels: {name: manifestInfo.name}}
     for(var container of containers) {
       if ('metadata' in container && 'labels' in container.metadata) {
         if (!('metadata' in template)) {

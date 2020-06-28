@@ -9,7 +9,7 @@ class ServiceView extends Component {
   render() {
     const node = this.props.node
     const serviceOptions = [
-      {'key': 'a', 'value': 'Load Balancer', 'text': 'Load Balancer'},
+      {'key': 'a', 'value': 'LoadBalancer', 'text': 'Load Balancer'},
       {'key': 'b', 'value': 'Node Port', 'text': 'Node Port'},
       {'key': 'c', 'value': 'Cluster IP', 'text': 'Cluster IP'},
       {'key': 'd', 'value': 'External IP', 'text': 'External IP'}
